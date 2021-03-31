@@ -1,0 +1,53 @@
+\documentclass{article}
+\usepackage[final]{pdfpages}
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+\usepackage{longtable}
+
+\usepackage[american]{babel}
+\usepackage[backend=biber,maxbibnames=9,sorting=ydmdddnt]{biblatex}
+\usepackage[left=2cm,top=2.5cm,right=2cm,bottom=3.5cm]{geometry}
+\usepackage[
+colorlinks,
+linkcolor=red,
+citecolor=blue,
+hypertexnames=true,
+pdftex=true,
+bookmarks=true,
+bookmarksopen=false,
+pdftitle={Archivo de Citas - Dr. Marco Aurelio Nu\~no Maganda},
+pdfsubject={Archivo de Citas},
+pdfkeywords={FPGAs, Reconfigurable Computing, Machine Learning, Computer Vision},
+pdfauthor={Dr. Marco Aurelio Nu\~no Maganda}
+]{hyperref}
+
+
+
+\DeclareSortingScheme{ydmdddnt}{ 
+  \sort{ 
+    \field{presort} 
+  } 
+  \sort[final]{ 
+    \field{sortkey} 
+  } 
+  \sort[direction=descending]{ 
+    \field{year} 
+  } 
+  \sort[direction=descending]{ 
+    \field{month} 
+  } 
+  \sort[direction=descending]{ 
+    \field{day} 
+  } 
+  \sort{ 
+    \field{journaltitle} 
+  } 
+  \sort{ 
+    \field{author} 
+    \field{editor} 
+  } 
+  \sort{ 
+    \field{title} 
+  } 
+} 
+

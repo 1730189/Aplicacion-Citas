@@ -1,0 +1,114 @@
+\newcommand{\CitaPNG}{\Cita.png}
+\newcommand{\ArchivoPrincipal}{\Cita_IND}
+\newcommand{\ArchivoSecundario}{\Cita}
+\usepackage{filecontents}
+\usepackage{graphicx}
+\usepackage[left=2cm,top=2.5cm,right=2cm,bottom=3.5cm]{geometry}
+\usepackage[
+colorlinks,
+linkcolor=red,
+citecolor=blue,
+hypertexnames=true,
+pdftex=true,
+bookmarks=true,
+bookmarksopen=false
+]{hyperref}
+
+
+
+%\usepackage[style = alphabetic, labelnumber, defernumbers = true,  backend = biber]{biblatex}
+\usepackage[backend=biber,maxbibnames=9,sorting=ydmdddnt]{biblatex}
+%\usepackage[backend=biber,maxbibnames=9,labelnumber,defernumbers = true, sorting=ydmdddnt]{biblatex}
+
+
+\DeclareSortingScheme{ydmdddnt}{ 
+  \sort{ 
+    \field{presort} 
+  } 
+  \sort[final]{ 
+    \field{sortkey} 
+  } 
+  \sort[direction=descending]{ 
+    \field{year} 
+  } 
+  \sort[direction=descending]{ 
+    \field{month} 
+  } 
+  \sort[direction=descending]{ 
+    \field{day} 
+  } 
+  \sort{ 
+    \field{journaltitle} 
+  } 
+  \sort{ 
+    \field{author} 
+    \field{editor} 
+  } 
+  \sort{ 
+    \field{title} 
+  } 
+} 
+
+\defbibheading{counter}{}
+\newcounter{refs}
+\makeatletter
+\defbibenvironment{counter}
+  {\setcounter{refs}{-1}
+  \renewcommand{\blx@driver}[1]{}
+  }
+  {Numero de citas para este art{\'i}culo:  \therefs}
+  {\stepcounter{refs}}
+\makeatother
+
+\addbibresource{\ArchivoSecundario.bib}
+\addbibresource{\ArchivoPrincipal.bib}
+
+
+
+\usepackage{hyperref}
+
+%Append keywords to identify different bibliography entries.
+\DeclareSourcemap{
+  \maps[datatype=bibtex, overwrite]{
+    \map{
+      \perdatasource{\ArchivoPrincipal.bib}
+      \step[fieldset=KEYWORDS, fieldvalue=primary, append]
+    }
+    \map{
+      \perdatasource{\ArchivoSecundario.bib}
+      \step[fieldset=KEYWORDS, fieldvalue=secondary, append]
+    }    
+  }
+}
+
+
+%\assignrefcontextkeyws[sorting=none]{secondary}
+
+\begin{document}
+
+%\thispagestyle{empty}
+\pagenumbering{gobble}
+
+\begin{center}
+\begin{tabular}{|p{15cm}|}
+\hline \hline
+\AtNextCite{\defcounter{maxnames}{99}}\fullcite{\Cita} \\
+\hline \hline
+\printbibliography[heading=counter,env=counter]\\
+\hline \hline
+\begin{center}
+Distribución de Total de Citas por AÑO\\
+\includegraphics[width=0.8\linewidth]{\CitaPNG}
+\end{center} \\
+\hline \hline
+\end{tabular}
+\end{center}
+
+\nocite{*}
+
+%\newrefcontext[sorting=none]
+%\printbibliography[title=Articulos Citados, keyword=primary, resetnumbers]
+
+\printbibliography[title=Listado de Citas, keyword=secondary, resetnumbers]
+
+\end{document}
