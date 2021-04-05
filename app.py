@@ -27,6 +27,7 @@ class Principal(QMainWindow):
         super().__init__()
         loadUi("gui_app.ui", self)
 
+        self.row=0
         self.dialogCrear = AbrirVista(self)
         self.dialogAsociar = VerGrafica(self)
 
@@ -44,6 +45,7 @@ class Principal(QMainWindow):
         self.btn_pdf.clicked.connect(self.CrearPdfIndividual)
         self.btn_individual.clicked.connect(self.Individual)
         self.btn_pdfgeneral.clicked.connect(self.CrearPdfGeneral)
+        self.tableWidget.clicked.connect(self.actual)
 
         #Deshabilitamos la Posible Modificacion desde la Tabla
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -107,7 +109,7 @@ class Principal(QMainWindow):
         archivo = parser.parse_file(open(repositorio + "/" + direccion, 'r'))
         #print(archivo)
         self.dialogCrear.archivoGeneral = archivo
-        row = 0
+        self.row = 0
         self.tableWidget.setRowCount(len(archivo.entries))
         #print("Aqui: ")
         #print(len(archivo.entries))
@@ -131,17 +133,16 @@ class Principal(QMainWindow):
             #print("\n")
 
             #print(row)
-            self.tableWidget.setItem(row, 0, QTableWidgetItem(i))
-            self.tableWidget.setItem(row, 1, QTableWidgetItem(authors))
-            self.tableWidget.setItem(row, 2, QTableWidgetItem(nombreYear))
-            self.tableWidget.setItem(row, 3, QTableWidgetItem(nombreJournal))
-            self.tableWidget.setItem(row, 4, QTableWidgetItem(nombreArticulo))
-            row += 1
+            self.tableWidget.setItem(self.row, 0, QTableWidgetItem(i))
+            self.tableWidget.setItem(self.row, 1, QTableWidgetItem(authors))
+            self.tableWidget.setItem(self.row, 2, QTableWidgetItem(nombreYear))
+            self.tableWidget.setItem(self.row, 3, QTableWidgetItem(nombreJournal))
+            self.tableWidget.setItem(self.row, 4, QTableWidgetItem(nombreArticulo))
+            self.row += 1
 
             #print(nombreArticulo)
         self.btn_asociar.setEnabled(True)
         self.btn_vista.setEnabled(True)
-        self.tableWidget.clicked.connect(self.actual)
         #archivo.close()
     #####################################################################
     def actual(self):
@@ -320,6 +321,7 @@ class Principal(QMainWindow):
     #####################################################################
     def CrearPdfIndividual(self):
         print("Hola pdf")
+        cwd = os.getcwd()
         variableNew = "\ "
         variableNewNew = variableNew.split(' ')
         f = open('seccionCInd.tex', 'r')
@@ -346,8 +348,13 @@ class Principal(QMainWindow):
                         variableNewNew[0] + "newcommand{\Cita}{" + llavebib + "}\n" +
                         seccionC)
                 a.close()
-            else:
-                print("No encontrado")
+                os.chdir(str(repositorio))
+                os.system("pdflatex " + llavebib + ".tex")
+                os.system("biber " + llavebib)
+                os.system("pdflatex " + llavebib + ".tex")
+                os.system("pdflatex " + llavebib + ".tex")
+                os.system("del *.aux *.bbl *.blg *.bcf *.out *.xml *.log")
+                os.chdir(str(cwd))
         
 
     #####################################################################
@@ -355,6 +362,7 @@ class Principal(QMainWindow):
         variableNew = "\ "
         variableNewNew = variableNew.split(' ')
         numero = 0
+        cwd = os.getcwd()
         f = open('seccionAGene.tex', 'r')
         seccionAGene = f.read()
         print(seccionAGene)
@@ -437,6 +445,16 @@ class Principal(QMainWindow):
                 "Pagina Vacia\n" +
                 "\clearpage\n" +
                 "\end{document}\n")
+        
+        f.close()
+
+        os.chdir(str(repositorio))
+        os.system("pdflatex " + direccionCor[0] + ".tex")
+        os.system("biber " + direccionCor[0])
+        os.system("pdflatex " + direccionCor[0] + ".tex")
+        os.system("pdflatex " + direccionCor[0] + ".tex")
+        os.system("del *.aux *.bbl *.blg *.bcf *.out *.xml *.log")
+        os.chdir(str(cwd))
 
     #####################################################################
     def closeEvent(self, event):

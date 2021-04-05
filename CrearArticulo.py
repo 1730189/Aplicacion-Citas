@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
 from pybtex.database.input import bibtex
 from PyQt5.QtCore import Qt
-from app import *
+from functools import partial
 
 class AbrirVista(QDialog):
     def __init__(self,parent):
@@ -19,11 +19,11 @@ class AbrirVista(QDialog):
         self.direccionGeneral = ""
 
         # Pestaña Numero 1
-        self.Btn_Crear1.clicked.connect(self.GenerarArticuloManual)
+        self.Btn_Crear1.clicked.connect(partial(self.GenerarArticuloManual,parent))
         # /Pestaña Numero 1
         
         #Pestaña Numero 2
-        self.Btn_Crear2.clicked.connect(self.GenerarArticuloDescarga)
+        self.Btn_Crear2.clicked.connect(partial(self.GenerarArticuloDescarga,parent))
         self.btn_seleccionar.clicked.connect(self.AbrirRepositorio2)
         self.repositorio2 = ""
         self.direccion2 = ""
@@ -32,11 +32,11 @@ class AbrirVista(QDialog):
         #/Pestaña Numero 2
         
         #Pestaña Numero 3
-        self.Btn_Crear3.clicked.connect(self.GenerarArticuloPlano)
+        self.Btn_Crear3.clicked.connect(partial(self.GenerarArticuloPlano,parent))
         #/Pestaña Numero 3
 
     #Pestaña Numero 1
-    def GenerarArticuloManual(self):
+    def GenerarArticuloManual(self,parent):
         # nombre = self.le_nombre.text()
         autor = self.Tab1_Autor.text()
         journalO = self.Tab1_Journal.text()
@@ -113,12 +113,12 @@ class AbrirVista(QDialog):
                        "\tyear = {" + ano + "},\n" +
                        "}")
             file.close()
+            parent.onChanged()
             self.Tab1_Autor.clear()
             self.Tab1_Journal.clear()
             self.Tab1_Year.clear()
             self.Tab1_Titulo.clear()
             self.close()
-            onChanged()
         else:
             print("No entro")
         
@@ -169,6 +169,7 @@ class AbrirVista(QDialog):
                    "\tyear = {" + ano + "},\n" +
                    "}")
         file.close()
+        parent.onChanged()
         self.close()
 
     #/Pestaña Numero 2
@@ -266,7 +267,7 @@ class AbrirVista(QDialog):
                    "\tyear = {" + year + "},\n" +
                    "}")
         file.close()
-
+        parent.onChanged()
         self.close()
     #/Pestaña Numero 3
 
