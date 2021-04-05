@@ -36,6 +36,8 @@ class Principal(QMainWindow):
         self.btn_grafica.setEnabled(False)
         self.btn_crearbib.setEnabled(False)
         self.btn_individual.setEnabled(False)
+        self.btn_pdf.setEnabled(False)
+        self.btn_pdfgeneral.setEnabled(False)
 
         self.btn_asociar.clicked.connect(self.ConectarAsociar)
         self.btn_vista.clicked.connect(self.ConectarCrear)
@@ -141,11 +143,13 @@ class Principal(QMainWindow):
             self.row += 1
 
             #print(nombreArticulo)
+        self.btn_pdfgeneral.setEnabled(True)
         self.btn_asociar.setEnabled(True)
         self.btn_vista.setEnabled(True)
         #archivo.close()
     #####################################################################
     def actual(self):
+        self.btn_pdf.setEnabled(True)
         self.btn_crearbib.setEnabled(True)
         self.btn_individual.setEnabled(True)
         #Limpiamos los labels
