@@ -20,6 +20,7 @@ from VerAsociacion import *
 global repositorio
 global archivos
 global direccion
+global contador
 
 
 class Principal(QMainWindow):
@@ -38,6 +39,7 @@ class Principal(QMainWindow):
         self.btn_individual.setEnabled(False)
         self.btn_pdf.setEnabled(False)
         self.btn_pdfgeneral.setEnabled(False)
+        self.btn_graficageneral.setEnabled(False)
 
         self.btn_asociar.clicked.connect(self.ConectarAsociar)
         self.btn_vista.clicked.connect(self.ConectarCrear)
@@ -48,6 +50,7 @@ class Principal(QMainWindow):
         self.btn_individual.clicked.connect(self.Individual)
         self.btn_pdfgeneral.clicked.connect(self.CrearPdfGeneral)
         self.tableWidget.clicked.connect(self.actual)
+        self.btn_graficageneral.clicked.connect(self.GraficaGeneral)
 
         #Deshabilitamos la Posible Modificacion desde la Tabla
         self.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -98,6 +101,7 @@ class Principal(QMainWindow):
     def onChanged(self):
         global direccion
         self.btn_grafica.setEnabled(True)
+        self.btn_graficageneral.setEnabled(True)
         #self.lw_contenido.clear()
         #Prueba de ver en que esta posicionado el combobox
         direccion = self.cb_contenido.currentText()
@@ -276,6 +280,58 @@ class Principal(QMainWindow):
         plt.show()
 
     #####################################################################
+    def GraficaGeneral(self):
+        pregunta = QMessageBox.question(self, "Principal", "Verifique que esté en el archivo principal",
+                                        QMessageBox.Yes | QMessageBox.No)
+        if pregunta == QMessageBox.Yes:
+            global contador
+            actual = ""
+            contador = self.cb_contenido.count()
+            actual = self.cb_contenido.currentText()
+            #print(contador)
+            nombreYear = []
+            nombresYear = []
+            for i in range(contador-1):
+                nombres = self.cb_contenido.itemText(i)
+                nombresSeparadosBajo = nombres.split('_')
+                if not nombres.endswith("IND.bib") and not nombres.endswith(actual):
+                    translator = str.maketrans('', '', string.punctuation)
+                    parser = bibtex.Parser()
+                    archivo = parser.parse_file(open(repositorio + "/" + nombres, 'r'))
+                    print(nombres)
+                    for i in archivo.entries.values():
+                        nombreLlave = i.key
+
+                        b = i.fields
+                        nombreYear.append(b["year"])
+                        print(nombreYear)
+            repetidos = collections.Counter(nombreYear)
+            print("Fechas y Cuantas Veces se Repiten " + str(repetidos))
+            fechas = []
+            for x in nombreYear:
+                if x not in fechas:
+                    fechas.append(x)
+            print(fechas.sort())
+            #print(nombreYear)
+            otravariablerepetida = []
+            for x in fechas:
+                otravariablerepetida.append(int(format(repetidos[x])))
+            print(otravariablerepetida)
+
+            fig, ax = plt.subplots()
+            
+            ax.set_title('Citado por Año')
+            
+            plt.bar(fechas, otravariablerepetida)
+            
+            actualsola = actual.split('.')
+            
+            
+            plt.savefig(repositorio + "/" + actualsola[0] + '.png')
+            
+            plt.show()
+
+    #####################################################################
     def CrearBib(self):
         row = self.tableWidget.currentRow()
         llave = self.tableWidget.item(row,0)
@@ -353,6 +409,7 @@ class Principal(QMainWindow):
                         seccionC)
                 a.close()
                 os.chdir(str(repositorio))
+                os.system("del *.aux *.bbl *.blg *.bcf *.out *.xml *.log")
                 os.system("pdflatex " + llavebib + ".tex")
                 os.system("biber " + llavebib)
                 os.system("pdflatex " + llavebib + ".tex")
@@ -363,102 +420,105 @@ class Principal(QMainWindow):
 
     #####################################################################
     def CrearPdfGeneral(self):
-        variableNew = "\ "
-        variableNewNew = variableNew.split(' ')
-        numero = 0
-        cwd = os.getcwd()
-        f = open('seccionAGene.tex', 'r')
-        seccionAGene = f.read()
-        print(seccionAGene)
-        f.close()
+        pregunta = QMessageBox.question(self, "Principal", "Verifique que esté en el archivo principal",
+                                        QMessageBox.Yes | QMessageBox.No)
+        if pregunta == QMessageBox.Yes:
+            variableNew = "\ "
+            variableNewNew = variableNew.split(' ')
+            numero = 0
+            cwd = os.getcwd()
+            f = open('seccionAGene.tex', 'r')
+            seccionAGene = f.read()
+            print(seccionAGene)
+            f.close()
 
-        f = open('seccionBGene.tex', 'r')
-        seccionBGene = f.read()
-        f.close()
+            f = open('seccionBGene.tex', 'r')
+            seccionBGene = f.read()
+            f.close()
 
-        f = open('seccionCGene.tex', 'r')
-        seccionCGene = f.read()
-        print(seccionCGene)
-        f.close()
-        nombresSolosA = []
-        archivos = os.listdir(repositorio)
+            f = open('seccionCGene.tex', 'r')
+            seccionCGene = f.read()
+            print(seccionCGene)
+            f.close()
+            nombresSolosA = []
+            archivos = os.listdir(repositorio)
 
-        for i in archivos:
-            if i.endswith(".tex"):
-                nombres = i
-                nombresSolos = nombres.split('.')
-                nombresSolosA.append(nombresSolos[0])
-                print(nombresSolosA)
-        
-        #\includegraphics[width=0.8\linewidth]{ListadodeArticulos_y_Citas.png}
-        direccionCor = direccion.split(".")
+            for i in archivos:
+                if i.endswith(".tex"):
+                    nombres = i
+                    nombresSolos = nombres.split('.')
+                    nombresSolosA.append(nombresSolos[0])
+                    print(nombresSolosA)
+            
+            #\includegraphics[width=0.8\linewidth]{ListadodeArticulos_y_Citas.png}
+            direccionCor = direccion.split(".")
 
-        f = open(repositorio + "/" + direccionCor[0] +".tex", "w")
-        f.write(seccionAGene + "\n")
+            f = open(repositorio + "/" + direccionCor[0] +".tex", "w")
+            f.write(seccionAGene + "\n")
 
-        f.write(variableNewNew[0] + "addbibresource{" + direccionCor[0] + ".bib}\n")
+            f.write(variableNewNew[0] + "addbibresource{" + direccionCor[0] + ".bib}\n")
 
-        f.write(seccionBGene + "\n")
+            f.write(seccionBGene + "\n")
 
-        print(direccionCor[0])
-        f.write("\includegraphics[width=0.8\linewidth]{" + direccionCor[0] + ".png}\n")
+            print(direccionCor[0])
+            f.write("\includegraphics[width=0.8\linewidth]{" + direccionCor[0] + ".png}\n")
 
-        f.write(seccionCGene + "\n")
-        for a in nombresSolosA:
-            numero = numero + 1
-            numerostr = str(numero)
-            print(numerostr)
-            f.write(variableNewNew[0] + "addtocounter{ContadorArticulos}{1}" + variableNewNew[0] +"arabic{ContadorArticulos}.&\AtNextCite{\defcounter{maxnames}{99}}" + variableNewNew[0] +"fullcite{" + a + "}\hyperref[XlabelX" + numerostr + "]{--Listado detallado sin auto-citas incluidas} " + variableNewNew[0] +"\ \hline" + "\n")
-        
-        f.write("\hline \hline\n" +
-                "\end{longtable}\n" +
-                "\setboolean{@twoside}{false}\n")
-        
-        translator = str.maketrans('', '', string.punctuation)
-        parser = bibtex.Parser()
-        archivo = parser.parse_file(open(repositorio + "/" + direccion, 'r'))
-        contador = 0
+            f.write(seccionCGene + "\n")
+            for a in nombresSolosA:
+                numero = numero + 1
+                numerostr = str(numero)
+                print(numerostr)
+                f.write(variableNewNew[0] + "addtocounter{ContadorArticulos}{1}" + variableNewNew[0] +"arabic{ContadorArticulos}.&\AtNextCite{\defcounter{maxnames}{99}}" + variableNewNew[0] +"fullcite{" + a + "}\hyperref[XlabelX" + numerostr + "]{--Listado detallado sin auto-citas incluidas} " + variableNewNew[0] +"\ \hline" + "\n")
+            
+            f.write("\hline \hline\n" +
+                    "\end{longtable}\n" +
+                    "\setboolean{@twoside}{false}\n")
+            
+            translator = str.maketrans('', '', string.punctuation)
+            parser = bibtex.Parser()
+            archivo = parser.parse_file(open(repositorio + "/" + direccion, 'r'))
+            contador = 0
 
-        for b in archivos:
-            #print("Dentro primer For")
-            if b.endswith(".tex"):
-                #print("Dentro primer If")
-                nombresTex = b
-                nombresTexSep = nombresTex.split(".")
-                #print(nombresTexSep)
-                for c in archivo.entries.values():
-                    #print("Dentro segundo For")
-                    nombreDLlave = c.key
-                    #print(nombreDLlave)
-                    d = c.fields
-                    if nombresTexSep[0] == nombreDLlave:
-                        contador = contador + 1
-                        contadorstr = str(contador)
-                        #print("Dentro segundo If")
-                        nombreDTitulo = d["title"]
-                        #print(nombreDTitulo)
+            for b in archivos:
+                #print("Dentro primer For")
+                if b.endswith(".tex"):
+                    #print("Dentro primer If")
+                    nombresTex = b
+                    nombresTexSep = nombresTex.split(".")
+                    #print(nombresTexSep)
+                    for c in archivo.entries.values():
+                        #print("Dentro segundo For")
+                        nombreDLlave = c.key
+                        #print(nombreDLlave)
+                        d = c.fields
+                        if nombresTexSep[0] == nombreDLlave:
+                            contador = contador + 1
+                            contadorstr = str(contador)
+                            #print("Dentro segundo If")
+                            nombreDTitulo = d["title"]
+                            #print(nombreDTitulo)
 
-                        f.write("\clearpage\n" +
-                                "\phantomsection\n" +
-                                "\label{XlabelX" + contadorstr +"}\n" +
-                                "\includepdf[pages=-,pagecommand={}]{" + nombresTexSep[0] + ".pdf}\n" +
-                                "" + variableNewNew[0] +"addcontentsline{toc}{section}{[" + contadorstr +"]. " + nombreDTitulo + "}\n")
+                            f.write("\clearpage\n" +
+                                    "\phantomsection\n" +
+                                    "\label{XlabelX" + contadorstr +"}\n" +
+                                    "\includepdf[pages=-,pagecommand={}]{" + nombresTexSep[0] + ".pdf}\n" +
+                                    "" + variableNewNew[0] +"addcontentsline{toc}{section}{[" + contadorstr +"]. " + nombreDTitulo + "}\n")
 
-        f.write("\clearpage\n" +
-                "\phantomsection\n" +
-                "Pagina Vacia\n" +
-                "\clearpage\n" +
-                "\end{document}\n")
-        
-        f.close()
+            f.write("\clearpage\n" +
+                    "\phantomsection\n" +
+                    "Pagina Vacia\n" +
+                    "\clearpage\n" +
+                    "\end{document}\n")
+            
+            f.close()
 
-        os.chdir(str(repositorio))
-        os.system("pdflatex " + direccionCor[0] + ".tex")
-        os.system("biber " + direccionCor[0])
-        os.system("pdflatex " + direccionCor[0] + ".tex")
-        os.system("pdflatex " + direccionCor[0] + ".tex")
-        os.system("del *.aux *.bbl *.blg *.bcf *.out *.xml *.log")
-        os.chdir(str(cwd))
+            os.chdir(str(repositorio))
+            os.system("pdflatex " + direccionCor[0] + ".tex")
+            os.system("biber " + direccionCor[0])
+            os.system("pdflatex " + direccionCor[0] + ".tex")
+            os.system("pdflatex " + direccionCor[0] + ".tex")
+            os.system("del *.aux *.bbl *.blg *.bcf *.out *.xml *.log")
+            os.chdir(str(cwd))
 
     #####################################################################
     def closeEvent(self, event):

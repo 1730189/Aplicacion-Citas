@@ -21,16 +21,67 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="3">
-     <widget class="QPushButton" name="btn_asociar">
+    <item row="7" column="3">
+     <widget class="QPushButton" name="btn_graficageneral">
+      <property name="text">
+       <string>Grafica General</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>Journal*</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="10">
+     <widget class="QPushButton" name="btn_individual">
+      <property name="text">
+       <string>Generar Bib IND</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="le_autor"/>
+    </item>
+    <item row="7" column="10">
+     <widget class="QPushButton" name="btn_pdfgeneral">
+      <property name="text">
+       <string>PDF General</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QLineEdit" name="le_ano"/>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Año*</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QLineEdit" name="le_titulo"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Autor*</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QPushButton" name="btn_abrir">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="text">
-       <string>Asociaciones</string>
+       <string>Abrir Repositorio</string>
       </property>
      </widget>
     </item>
@@ -46,33 +97,6 @@
     </item>
     <item row="4" column="1">
      <widget class="QLineEdit" name="le_nombre"/>
-    </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Llave*</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="1">
-     <widget class="QLineEdit" name="le_titulo"/>
-    </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Autor*</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="10">
-     <widget class="QPushButton" name="btn_vista">
-      <property name="text">
-       <string>Crear Articulo</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="1">
-     <widget class="QLineEdit" name="le_ano"/>
     </item>
     <item row="2" column="10">
      <widget class="QPushButton" name="btn_crearbib">
@@ -90,33 +114,17 @@
     <item row="5" column="1">
      <widget class="QLineEdit" name="le_journal"/>
     </item>
-    <item row="0" column="1" colspan="2">
-     <widget class="QComboBox" name="cb_contenido">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Llave*</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="label_4">
+    <item row="0" column="10">
+     <widget class="QPushButton" name="btn_vista">
       <property name="text">
-       <string>Journal*</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QPushButton" name="btn_abrir">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Abrir Repositorio</string>
+       <string>Crear Articulo</string>
       </property>
      </widget>
     </item>
@@ -133,24 +141,20 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>Año*</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="10">
-     <widget class="QPushButton" name="btn_individual">
-      <property name="text">
-       <string>Generar Bib IND</string>
+    <item row="0" column="1">
+     <widget class="QComboBox" name="cb_contenido">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
      </widget>
     </item>
     <item row="3" column="3">
      <widget class="QPushButton" name="btn_pdf">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+       <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -160,13 +164,16 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QLineEdit" name="le_autor"/>
-    </item>
-    <item row="7" column="10">
-     <widget class="QPushButton" name="btn_pdfgeneral">
+    <item row="0" column="3">
+     <widget class="QPushButton" name="btn_asociar">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="text">
-       <string>PDF General</string>
+       <string>Asociaciones</string>
       </property>
      </widget>
     </item>
