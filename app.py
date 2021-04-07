@@ -27,7 +27,7 @@ class Principal(QMainWindow):
     def __init__(self):
         super().__init__()
         loadUi("gui_app.ui", self)
-
+        pregunta = QMessageBox.warning(self, "Principal", "Verifique que tiene un archivo con extension .bib primero")
         self.row=0
         self.dialogCrear = AbrirVista(self)
         self.dialogAsociar = VerGrafica(self)
