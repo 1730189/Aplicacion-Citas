@@ -96,7 +96,7 @@ class AbrirVista(QDialog):
         print(llave)
         
         # Visualizacion de la salida del articulo
-        print("\n@articule{" + llave + ",\n" +
+        print("\n@article{" + llave + ",\n" +
               "\ttitle = {" + titulo + "},\n" +
               "\tjournal = {" + journalO + "},\n" +
               "\tyear = {" + ano + "},\n" +
@@ -106,7 +106,7 @@ class AbrirVista(QDialog):
         if (au == True) and (j == True) and (a == True) and (t == True):
         # print(repositorio)
             file = open(self.repositorioGeneral + "/" + self.direccionGeneral, "a")
-            file.write("\n@articule{" + llave + ",\n" +
+            file.write("\n@article{" + llave + ",\n" +
                        "\ttitle = {" + titulo + "},\n" +
                        "\tauthor = {" + autor + "},\n" +
                        "\tjournal = {" + journalO + "},\n" +
@@ -162,7 +162,7 @@ class AbrirVista(QDialog):
         print(self.repositorioGeneral)
         print(self.direccionGeneral)
         file = open(self.repositorioGeneral + "/" + self.direccionGeneral, "a")
-        file.write("\n@articule{" + llave + ",\n" +
+        file.write("\n@article{" + llave + ",\n" +
                    "\ttitle = {" + titulo + "},\n" +
                    "\tauthor = {" + authors + "},\n" +
                    "\tjournal = {" + journalO + "},\n" +
