@@ -333,12 +333,15 @@ class Principal(QMainWindow):
 
     #####################################################################
     def CrearBib(self):
-        row = self.tableWidget.currentRow()
-        llave = self.tableWidget.item(row,0)
-        llavebib = llave.text()
-        print(llavebib)
-        file = open(repositorio + "/" + llavebib + ".bib", "w")
-        file.close()
+        pregunta = QMessageBox.question(self, "Principal", "Verifique que selecciono el elemento correcto de la tabla",
+                                        QMessageBox.Yes | QMessageBox.No)
+        if pregunta == QMessageBox.Yes:
+            row = self.tableWidget.currentRow()
+            llave = self.tableWidget.item(row,0)
+            llavebib = llave.text()
+            print(llavebib)
+            file = open(repositorio + "/" + llavebib + ".bib", "w")
+            file.close()
 
     #####################################################################
     def Individual(self):
