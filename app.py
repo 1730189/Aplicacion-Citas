@@ -342,85 +342,91 @@ class Principal(QMainWindow):
 
     #####################################################################
     def Individual(self):
-        row = self.tableWidget.currentRow()
-        llave = self.tableWidget.item(row,0)
-        llavebib = llave.text()
-        print(llavebib)
-        translator = str.maketrans('', '', string.punctuation)
-        parser = bibtex.Parser()
-        archivo = parser.parse_file(open(repositorio + "/" + direccion, 'r'))
-        for i in archivo.entries.values():
-            print(i.key)
-            nombreLlave = i.key
-            b = i.fields
-            if(llavebib == nombreLlave):
-                #print("Es igual")
-                nombreTitulo = b["title"]
-                nombreJournal = b["journal"]
-                nombreYear = b["year"]
-                authors = ""
-                for author in i.persons["author"]:
-                    nombreAutor = str(author.first()) + " " + str(author.last())
-                    nombreAutor = nombreAutor.translate(translator)
-                    if len(authors) == 0:
-                        authors = '' + nombreAutor
-                    else:
-                        authors = authors + ", " + nombreAutor
+        pregunta = QMessageBox.question(self, "Principal", "Verifique que selecciono el elemento correcto de la tabla",
+                                        QMessageBox.Yes | QMessageBox.No)
+        if pregunta == QMessageBox.Yes:
+            row = self.tableWidget.currentRow()
+            llave = self.tableWidget.item(row,0)
+            llavebib = llave.text()
+            print(llavebib)
+            translator = str.maketrans('', '', string.punctuation)
+            parser = bibtex.Parser()
+            archivo = parser.parse_file(open(repositorio + "/" + direccion, 'r'))
+            for i in archivo.entries.values():
+                print(i.key)
+                nombreLlave = i.key
+                b = i.fields
+                if(llavebib == nombreLlave):
+                    #print("Es igual")
+                    nombreTitulo = b["title"]
+                    nombreJournal = b["journal"]
+                    nombreYear = b["year"]
+                    authors = ""
+                    for author in i.persons["author"]:
+                        nombreAutor = str(author.first()) + " " + str(author.last())
+                        nombreAutor = nombreAutor.translate(translator)
+                        if len(authors) == 0:
+                            authors = '' + nombreAutor
+                        else:
+                            authors = authors + ", " + nombreAutor
 
-                file = open(repositorio + "/" + llavebib + "_IND.bib", "w")
-                file.write("\n@article{" + llavebib + ",\n" +
-                           "\ttitle = {" + nombreTitulo + "},\n" +
-                           "\tauthor = {" + authors + "},\n" +
-                           "\tjournal = {" + nombreJournal + "},\n" +
-                           "\tyear = {" + nombreYear + "},\n" +
-                           "}")
-                file.close()
-            else:
-                print("Es diferente")
+                    file = open(repositorio + "/" + llavebib + "_IND.bib", "w")
+                    file.write("\n@article{" + llavebib + ",\n" +
+                            "\ttitle = {" + nombreTitulo + "},\n" +
+                            "\tauthor = {" + authors + "},\n" +
+                            "\tjournal = {" + nombreJournal + "},\n" +
+                            "\tyear = {" + nombreYear + "},\n" +
+                            "}")
+                    file.close()
+                else:
+                    print("Es diferente")
 
     #####################################################################
     def CrearPdfIndividual(self):
-        print("Hola pdf")
-        cwd = os.getcwd()
-        variableNew = "\ "
-        variableNewNew = variableNew.split(' ')
-        f = open('seccionCInd.tex', 'r')
-        seccionC = f.read()
-        #print(seccionC)
-        f.close()
-        
-        row = self.tableWidget.currentRow()
-        llave = self.tableWidget.item(row,0)
-        llavebib = llave.text()
-        print(llavebib)
+        pregunta = QMessageBox.question(self, "Principal", "Verifique que selecciono el elemento correcto de la tabla, visualizar la grafica, crear Bib IND y crear Bib",
+                                        QMessageBox.Yes | QMessageBox.No)
+        if pregunta == QMessageBox.Yes:
+            print("Hola pdf")
+            cwd = os.getcwd()
+            variableNew = "\ "
+            variableNewNew = variableNew.split(' ')
+            f = open('seccionCInd.tex', 'r')
+            seccionC = f.read()
+            #print(seccionC)
+            f.close()
+            
+            row = self.tableWidget.currentRow()
+            llave = self.tableWidget.item(row,0)
+            llavebib = llave.text()
+            print(llavebib)
 
-        translator = str.maketrans('', '', string.punctuation)
-        parser = bibtex.Parser()
-        archivo = parser.parse_file(open(repositorio + "/" + direccion, 'r'))
-        
-        for i in archivo.entries.values():
-            print(i.key)
-            nombreLlave = i.key
-            if(llavebib == nombreLlave):
-                #print("Encontrado")
-                a = open(repositorio + "/" + llavebib + ".tex", "w")
-                a.write("\documentclass{article}\n" + 
-                        variableNewNew[0] + "newcommand{\Cita}{" + llavebib + "}\n" +
-                        seccionC)
-                a.close()
-                os.chdir(str(repositorio))
-                os.system("del *.aux *.bbl *.blg *.bcf *.out *.xml *.log")
-                os.system("pdflatex " + llavebib + ".tex")
-                os.system("biber " + llavebib)
-                os.system("pdflatex " + llavebib + ".tex")
-                os.system("pdflatex " + llavebib + ".tex")
-                os.system("del *.aux *.bbl *.blg *.bcf *.out *.xml *.log")
-                os.chdir(str(cwd))
+            translator = str.maketrans('', '', string.punctuation)
+            parser = bibtex.Parser()
+            archivo = parser.parse_file(open(repositorio + "/" + direccion, 'r'))
+            
+            for i in archivo.entries.values():
+                print(i.key)
+                nombreLlave = i.key
+                if(llavebib == nombreLlave):
+                    #print("Encontrado")
+                    a = open(repositorio + "/" + llavebib + ".tex", "w")
+                    a.write("\documentclass{article}\n" + 
+                            variableNewNew[0] + "newcommand{\Cita}{" + llavebib + "}\n" +
+                            seccionC)
+                    a.close()
+                    os.chdir(str(repositorio))
+                    os.system("del *.aux *.bbl *.blg *.bcf *.out *.xml *.log")
+                    os.system("pdflatex " + llavebib + ".tex")
+                    os.system("biber " + llavebib)
+                    os.system("pdflatex " + llavebib + ".tex")
+                    os.system("pdflatex " + llavebib + ".tex")
+                    os.system("del *.aux *.bbl *.blg *.bcf *.out *.xml *.log")
+                    os.chdir(str(cwd))
         
 
     #####################################################################
     def CrearPdfGeneral(self):
-        pregunta = QMessageBox.question(self, "Principal", "Verifique que esté en el archivo principal",
+        pregunta = QMessageBox.question(self, "Principal", "Verifique que esté en el archivo principal y visualizar la grafica general",
                                         QMessageBox.Yes | QMessageBox.No)
         if pregunta == QMessageBox.Yes:
             variableNew = "\ "
